@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html >
+<head>
+<meta charset="UTF-8">
+<title>Menu</title>
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link rel="stylesheet" href="css/normalize.css">
+
+<style>
+/* NOTE: The styles were added inline because Prefixfree needs access to your styles and they must be inlined if they are on local disk! */
+/*Credit where its due: This cute little animation is a modification of this one CodePen: http://codepen.io/anon/pen/KVzmvz*/
+
+body {
+height: 100%;
+overflow:hidden;
+width: 100%;
+cursor: pointer;
+}
+
+#title {
+position: fixed;
+top: 50px;
+text-align: center;
+width: 100%;
+font-family: Avant Garde,Avantgarde,Century Gothic,CenturyGothic,AppleGothic,sans-serif; 
+font-weight: 900;
+color:#566c73;
+opacity: 0.6;
+}
+
+#road {
+width: 100%;
+height: 150px;
+background-color: #4a3e4a;
+position: absolute;
+bottom: 0;
+border-top: 10px #626473 solid;
+overflow: hidden;
+}
+
+#road ul {
+width: 100%;
+list-style: none;
+}
+
+#road li {
+width: 70px;
+height: 10px;
+background-color: #5f555e ; 
+float: left;
+margin-top: 55px;
+margin-right: 63px;
+overflow: hidden;
+}
+
+#grass {
+border-bottom: 50px solid #70a155;
+border-left: 50px solid transparent;
+height: 0;
+width: 80%;
+position: absolute;
+right: 0;
+top: 350px
+
+
+}
+
+
+#block1 {
+width:100px;
+height:70px;
+background-color: #995a50;
+position:absolute;
+left: 170px;
+top: 232px;
+border-top: 3px solid #fff;
+}
+
+#block2 {
+width:100px;
+height:70px;
+background-color: #995a50;
+position:absolute;
+left: 170px;
+top: 159px;
+border-top: 3px solid #fff;
+}
+
+
+#bus {
+width: 410px;
+position:fixed;
+animation: bus 7s ease-in-out infinite;
+bottom: 45px;
+background-color: red
+}
+
+#busMiddel {
+width: 410px;
+height: 65px; 
+background-color: #eaeaea;
+border-bottom: 10px inset #0676f4;
+box-shadow: 0px 0px 30px rgba(0,0,0,0.5);
+}
+
+#busWindowsMiddle {
+width: 366px;
+height: 50px;
+background-color: #658492;
+margin: 25px 0 0 34px;
+position: absolute;
+border-top: 10px inset #86A7C2;
+border-left: 10px inset #86A7C2;  
+}
+
+.busWindowsShadow {
+width: 10px;
+height: 50px;
+margin-left: 40px;
+border-left: 14px inset #86A7C2;
+}
+
+.busWindowsShadow1 {
+width: 10px;
+height: 50px;
+margin-left: 105px;
+margin-top: -50px;
+border-left: 14px inset #86A7C2;
+}
+
+.busWindowsShadow2 {
+width: 10px;
+height: 50px;
+margin-left: 165px;
+margin-top: -50px;
+border-left: 14px inset #86A7C2;
+}
+
+.busWindowsShadow3 {
+width: 10px;
+height: 50px;
+margin-left: 225px;
+margin-top: -50px;
+border-left: 14px inset #86A7C2;
+}
+
+.busWindowsShadow4 {
+width: 10px;
+height: 93px;
+margin-left: 310px;
+margin-top: -50px;
+border-left: 34px inset #86A7C2;
+}
+
+#busBottom {
+width: 410px;
+height: 40px;
+background-color: #eaeaea;
+border-top: 20px inset #0676f4;
+box-shadow: 0px 0px 30px rgba(0,0,0,0.5);
+}
+
+
+#busWindowsBottom {
+width: 35px;
+height: 90px;
+background-color: #658492;
+margin: -60px 0 0 340px;
+position: absolute;
+border-left: 10px inset #86A7C2;
+}
+
+#wheelLeft {
+width: 30px;
+height: 30px;
+background-color: #514552;
+border-radius: 50%;
+border: 10px #3a3040 solid;
+position: absolute;
+margin: -30px 0 0 100px;
+}
+
+#wheelRight {
+width: 30px;
+height: 30px;
+background-color: #514552;
+border-radius: 50%;
+border: 10px #3a3040 solid;
+position: absolute;
+margin: -30px 0 0 310px;
+}
+
+@keyframes bus {
+from {
+margin-left: -410px;
+}
+to {
+margin-left: 100%;
+}
+}
+
+
+/* clouds */
+
+#clouds{
+	width: 100%;
+	padding: 100px 0;
+	background: #c9dbe9;
+	background: -webkit-linear-gradient(top, #c9dbe9 0%, #fff 100%);
+	background: -linear-gradient(top, #c9dbe9 0%, #fff 100%);
+	background: -moz-linear-gradient(top, #c9dbe9 0%, #fff 100%);
+	height: 100%
+}
+
+/*Time to finalise the cloud shape*/
+.cloud {
+	width: 200px; height: 60px;
+	background: #fff;
+	
+	border-radius: 200px;
+	-moz-border-radius: 200px;
+	-webkit-border-radius: 200px;
+	
+	position: relative; 
+}
+
+.cloud:before, .cloud:after {
+	content: '';
+	position: absolute; 
+	background: #fff;
+	width: 100px; height: 80px;
+	position: absolute; top: -15px; left: 10px;
+	
+	border-radius: 100px;
+	-moz-border-radius: 100px;
+	-webkit-border-radius: 100px;
+	
+	-webkit-transform: rotate(30deg);
+	transform: rotate(30deg);
+	-moz-transform: rotate(30deg);
+}
+
+.cloud:after {
+	width: 120px; height: 120px;
+	top: -55px; left: auto; right: 15px;
+}
+
+/*Time to animate*/
+.x1 {
+	-webkit-animation: moveclouds 15s linear infinite;
+	-moz-animation: moveclouds 15s linear infinite;
+	-o-animation: moveclouds 15s linear infinite;
+}
+
+/*variable speed, opacity, and position of clouds for realistic effect*/
+.x2 {
+	left: 200px;
+	
+	-webkit-transform: scale(0.6);
+	-moz-transform: scale(0.6);
+	transform: scale(0.6);
+	opacity: 0.6; /*opacity proportional to the size*/
+	
+	/*Speed will also be proportional to the size and opacity*/
+	/*More the speed. Less the time in 's' = seconds*/
+	-webkit-animation: moveclouds 25s linear infinite;
+	-moz-animation: moveclouds 25s linear infinite;
+	-o-animation: moveclouds 25s linear infinite;
+}
+
+.x3 {
+	left: -250px; top: -200px;
+	
+	-webkit-transform: scale(0.8);
+	-moz-transform: scale(0.8);
+	transform: scale(0.8);
+	opacity: 0.8; /*opacity proportional to the size*/
+	
+	-webkit-animation: moveclouds 20s linear infinite;
+	-moz-animation: moveclouds 20s linear infinite;
+	-o-animation: moveclouds 20s linear infinite;
+}
+
+.x4 {
+	left: 470px; top: -250px;
+	
+	-webkit-transform: scale(0.75);
+	-moz-transform: scale(0.75);
+	transform: scale(0.75);
+	opacity: 0.75; /*opacity proportional to the size*/
+	
+	-webkit-animation: moveclouds 18s linear infinite;
+	-moz-animation: moveclouds 18s linear infinite;
+	-o-animation: moveclouds 18s linear infinite;
+}
+
+.x5 {
+	left: -150px; top: -150px;
+	
+	-webkit-transform: scale(0.8);
+	-moz-transform: scale(0.8);
+	transform: scale(0.8);
+	opacity: 0.8; /*opacity proportional to the size*/
+	
+	-webkit-animation: moveclouds 20s linear infinite;
+	-moz-animation: moveclouds 20s linear infinite;
+	-o-animation: moveclouds 20s linear infinite;
+}
+
+@-webkit-keyframes moveclouds {
+	0% {margin-left: 1000px;}
+	100% {margin-left: -1000px;}
+}
+@-moz-keyframes moveclouds {
+	0% {margin-left: 1000px;}
+	100% {margin-left: -1000px;}
+}
+@-o-keyframes moveclouds {
+	0% {margin-left: 1000px;}
+	100% {margin-left: -1000px;}
+}
+</style>
+
+
+<script src="js/prefixfree.min.js"></script>
+
+
+</head>
+
+<body id="everything">
+
+
+	
+
+		<div id="clouds">
+			<div class="cloud x1"></div>
+			<!-- Time for multiple clouds to dance around -->
+			<div class="cloud x2"></div>
+			<div class="cloud x3"></div>
+			<div class="cloud x4"></div>
+			<div class="cloud x5"></div>
+		</div>
+
+
+		<div id="title">
+			<center>
+				<p style="font-size:7vw;margin-top:0px;margin-bottom:0px;">
+					
+				</p>
+				<p style="font-size:7vw;margin-top:0px;margin-bottom:0px;">
+					MVP Asignacion de Vehiculos
+				</p>
+				<div>
+				<a href="{{ url_for('show_tables') }}">
+				<button type="button" style="margin-top: 3px; margin: 13px;" class="btn btn-primary btn-lg">Ver TimeTable</button>
+				</a>
+				<button type="button" style="margin-top: 3px; margin: 13px;" class="btn btn-warning btn-lg">Agregar Vehiculo</button>
+				<button type="button" style="margin-top: 3px; margin: 13px;" class="btn btn-success btn-lg">Asignar Vehiculo</button>
+				<button type="button" style="margin-top: 3px; margin: 13px;" class="btn btn-danger btn-lg">Ver Estadisticas</button>
+				</div>
+
+			</center>
+
+		</div>
+
+		<div id="road">
+			<ul>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+			</ul>
+		</div>
+
+		<div id="bus">
+			<div id="busMiddel">
+				<div id="busWindowsMiddle">
+					<div class="busWindowsShadow"></div>
+					<div class="busWindowsShadow1"></div>
+					<div class="busWindowsShadow2"></div>
+					<div class="busWindowsShadow3"></div>
+					<div class="busWindowsShadow4"></div>
+				</div>
+			</div>
+		<div id="busBottom"><div id="busWindowsBottom"></div></div>
+			<div id="wheelLeft"></div>
+			<div id="wheelRight"></div>
+		</div>
+
+
+
+</body>
+
+<script type="text/javascript">
+
+	window.onload = function () {
+		var w = window.innerWidth;
+		var h = window.innerHeight;
+	};
+	// document.getElementsByTagName("body")[0].style.overflow = "hidden";
+
+</script>
+
+</html>
+
+
