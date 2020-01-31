@@ -1,0 +1,19 @@
+
+
+=================================================================
+
+
+Data File: C:\Users\alema\Videos\datica.txt.txt
+
+
+Function       Sq Error
+-----------------------
+Erlang         0.00159
+Exponential    0.00159
+Weibull        0.00733
+Gamma          0.0236
+Beta           0.0412
+Lognormal      0.0921
+Normal         0.169
+Triangular     0.358
+Uniform        0.456

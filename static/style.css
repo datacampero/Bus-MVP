@@ -24,9 +24,15 @@ table.dataframe, .dataframe th, .dataframe td {
 }
 
 .female th {
-    background-color: #f11010;
+    background-color: #3afa00;
     color: white;
 }
+
+.sal th {
+  background-color: #fa7000;
+  color: white;
+}
+
 
 tr:nth-child(odd)		{ background-color:#eee; }
 tr:nth-child(even)	{ background-color:#fff; }

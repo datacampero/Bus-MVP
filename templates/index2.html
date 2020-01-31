@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html >
+<head>
+<meta charset="UTF-8">
+<title>Menu</title>
+
+<link rel="stylesheet" href="static/css/style.css">
+
+<link rel="stylesheet" href="static/css/normalize.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.css" rel="stylesheet">
+
+
+
+
+<script src="js/prefixfree.min.js"></script>
+
+
+</head>
+
+<body id="everything">
+		<div id="clouds">
+			<div class="cloud x1"></div>
+			<!-- Time for multiple clouds to dance around -->
+			<div class="cloud x2"></div>
+			<div class="cloud x3"></div>
+			<div class="cloud x4"></div>
+			<div class="cloud x5"></div>
+		</div>
+
+
+		<div id="title">
+			<center>
+				<p style="font-size:7vw;margin-top:0px;margin-bottom:0px;">
+					
+				</p>
+				<p style="font-size:7vw;margin-top:0px;margin-bottom:0px;">
+					MVP Asignacion de Vehiculos
+				</p>
+				<div>
+				<a type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#ModalFrecuencia">Calcular Frecuencia</a>
+
+				<a href="{{ url_for('show_tables') }}">
+					<button type="button" style="margin-top: 3px; margin: 13px;" class="btn btn-warning btn-lg">Ver TimeTable</button>
+					</a>
+
+					<a type="button" class="btn btn-danger btn-lg" data-toggle="modal" data-target="#myModal">Simulacion</a>					
+				</div>
+
+			</center>
+
+		</div>
+
+		<div id="road">
+			<ul>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+			</ul>
+		</div>
+
+		<div id="bus">
+			<div id="busMiddel">
+				<div id="busWindowsMiddle">
+					<div class="busWindowsShadow"></div>
+					<div class="busWindowsShadow1"></div>
+					<div class="busWindowsShadow2"></div>
+					<div class="busWindowsShadow3"></div>
+					<div class="busWindowsShadow4"></div>
+				</div>
+			</div>
+		<div id="busBottom"><div id="busWindowsBottom"></div></div>
+			<div id="wheelLeft"></div>
+			<div id="wheelRight"></div>
+		</div>
+
+		 <!-- Modal de frecuencia con el post de flask-->
+		<div class="modal fade" id="myModal" role="dialog">
+			<div class="modal-dialog modal-lg">
+			
+			  <!-- Modal content-->
+			  <div class="modal-content">
+				<div class="modal-header">
+				  <button type="button" class="close" data-dismiss="modal">&times;</button>
+				  <h3 class="modal-title text-center"> <i class="fas fa-calculator"></i> Simulacion</h3>
+				</div>
+				<div class="modal-body">
+					<form method=POST enctype=multipart/form-data action="{{ url_for('simulacion') }}">
+						<div class="form-row">
+				
+							<div class="form-group col-md-6">
+							  <label for="inputPassword4">Intervalo de autobuses</label>
+							  <input type="text" class="form-control" id="inter" placeholder="Ejemplo: 15">
+
+							</div>
+						  </div>
+						  <div class="form-group col-md-6">
+							<label for="inputAddress">Distribucion exponencial de llegada de pasajeros</label>
+							<input type="text" class="form-control" id="expo" placeholder="Ejemplo: 5">
+						  </div>
+						  <div class="form-group col-md-6">
+							<label for="inputAddress2">Cantidad de Autobuses</label>
+							<input type="text" class="form-control" id="cant" placeholder="Ejemplo: 20">
+						  </div>
+						  <div class="form-row">
+							<div class="form-group col-md-6">
+							  <label for="inputCity">Velocidad del Autobus</label>
+							  <input type="text" class="form-control" placeholder="Ejemplo: 5" id="inputCity">
+							</div>
+							<div class="form-group col-md-4">
+							  <label for="inputState">Mostrar resultados cada...</label>
+							  <select id="inputState" class="form-control">
+							  
+								<option selected>1 </option> min
+								<option>2 min </option>
+								<option>5 min</option>
+								<option>10 min </option>
+							  </select>
+							</div>
+							
+						  </div>
+						  <div class="form-group">
+							  <center>
+									<button type="submit" class="btn btn-success">Comenzar simulacion</button>
+							  </center>
+							  </div>
+
+
+                    </form>
+				</div>
+				<div class="modal-footer">
+				  <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+				</div>
+			  </div>
+			  
+			</div>
+		  </div>
+
+	<!-- Modal de simulacion copia para frecuencia-->
+	<div class="modal fade" id="ModalFrecuencia" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title text-center">  <i class="fas fa-calculator"></i> Calcular Frecuencia</h3>
+                </div>
+                <div class="modal-body">
+                        <form method=POST enctype=multipart/form-data action="{{ url_for('calculate_headway') }}">
+                                <div class="form-row">
+                                  <div class="form-group col-md-6">
+                                    <label for="inputEmail4">Introduzca costo del servicio</label>
+                                    <input type="text" class="form-control" id="costoservicio" placeholder="Ejemplo: 100">
+                                  </div>
+                                  <div class="form-group col-md-6">
+                                    <label for="inputPassword4">Introduzca costo del tiempo de espera</label>
+                                    <input type="text" class="form-control" id="costotiempo" placeholder="Ejemplo: 20">
+                                  </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                  <label for="inputAddress">Introduzca la velocidad promedio del vehiculo</label>
+                                  <input type="text" class="form-control" id="velocidadve" placeholder="Ejemplo:10" >
+                                </div>
+                                <div class="form-group col-md-4">
+                                  <label for="inputAddress2">Introduzca la capacidad de los vehiculos</label>
+                                  <input type="text" class="form-control" id="capacidad" placeholder="Ejemplo: 30" >
+                                </div>
+                        
+                                <div class="form-group">
+									<center>
+                                        <button type="submit" class="btn btn-success">Calcular Frecuencia</button>
+									</center>
+                              </form>
+                </div>
+            </div>
+        </div>
+    </div>	  
+
+
+		<!-- Modal de simulacion copia para frecuencia-->
+		<div class="modal fade" id="ModalFrecuencia2" role="dialog">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h3 class="modal-title text-center">  <i class="fas fa-calculator"></i> Calcular Frecuencia</h3>
+					</div>
+					<div class="modal-body">
+							<form method=POST enctype=multipart/form-data action="{{ url_for('calculate_headway') }}">
+									<div class="form-row">
+									  <div class="form-group col-md-6">
+										<label for="inputEmail4">Introduzca costo del servicio</label>
+										<input type="text" class="form-control" id="costoservicio" placeholder="Ejemplo: 100">
+									  </div>
+									  <div class="form-group col-md-6">
+										<label for="inputPassword4">Introduzca costo del tiempo de espera</label>
+										<input type="text" class="form-control" id="costotiempo" placeholder="Ejemplo: 20">
+									  </div>
+									</div>
+									<div class="form-group col-md-6">
+									  <label for="inputAddress">Introduzca la velocidad promedio del vehiculo</label>
+									  <input type="text" class="form-control" id="velocidadve" placeholder="Ejemplo:10" >
+									</div>
+									<div class="form-group col-md-4">
+									  <label for="inputAddress2">Introduzca la capacidad de los vehiculos</label>
+									  <input type="text" class="form-control" id="capacidad" placeholder="Ejemplo: 30" >
+									</div>
+							
+									<div class="form-group">
+										<center>
+											<button type="submit" class="btn btn-success">Calcular Frecuencia</button>
+										</center>
+								  </form>
+					</div>
+				</div>
+			</div>
+		</div>	  
+	
+
+
+
+    <!-- Modal de simulacion-->
+    <div class="modal fade" id="modalcito" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title text-center"> <i class="fas fa-users"></i> Datos de la Simulacion</h3>
+                </div>
+                <div class="modal-body">
+					<form method=POST enctype=multipart/form-data action="{{ url_for('simulacion') }}">
+                                <div class="form-row">
+                                  <div class="form-group col-md-6">
+                                    <label for="inputEmail4">Vector de paradas</label>
+                                    <input type="text" class="form-control" id="inputEmail4" placeholder="Ejemplo: [2,10,15,20,30]">
+                                  </div>
+                                  <div class="form-group col-md-6">
+                                    <label for="inputPassword4">Intervalo de autobuses</label>
+                                    <input type="text" class="form-control" id="inputPassword4" placeholder="Ejemplo: 15">
+                                  </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                  <label for="inputAddress">Distribucion exponencial de llegada de pasajeros</label>
+                                  <input type="text" class="form-control" id="inputAddress" placeholder="Ejemplo: 5">
+                                </div>
+                                <div class="form-group col-md-4">
+                                  <label for="inputAddress2">Cantidad de Autobuses</label>
+                                  <input type="text" class="form-control" id="inputAddress2" placeholder="Ejemplo: 15">
+                                </div>
+                                <div class="form-row">
+                                  <div class="form-group col-md-6">
+                                    <label for="inputCity">Velocidad del Autobus</label>
+                                    <input type="text" class="form-control" id="inputCity">
+                                  </div>
+                                  <div class="form-group col-md-4">
+                                    <label for="inputState">Mostrar resultados cada...</label>
+                                    <select id="inputState" class="form-control">
+                                    
+                                      <option selected>1 min (default) </option>
+                                      <option>2 min </option>
+                                      <option>5 min</option>
+                                      <option>10 min </option>
+                                    </select>
+                                  </div>
+                                  <div class="form-group col-md-2">
+                                    <label for="inputZip">Nombre de la simulacion</label>
+                                    <input type="text" class="form-control" id="inputZip">
+                                  </div>
+                                </div>
+                                <div class="form-group">
+										<button type="submit" class="btn btn-success">Comenzar simulacion</button>
+									</div>
+                      
+                              </form>
+          
+
+
+                </div>
+
+ 
+
+            </div>
+        </div>
+    </div>
+
+</body>
+
+
+<script type="text/javascript">
+
+	window.onload = function () {
+		var w = window.innerWidth;
+		var h = window.innerHeight;
+	};
+
+</script>
+ 
+
+</html>
+
+

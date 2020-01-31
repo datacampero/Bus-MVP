@@ -1,8 +1,16 @@
 from flask import *
+from flask import Flask, request, render_template, sessions #backend
 import pandas as pd
 import datetime
 import numpy as np
 app = Flask(__name__)
+from scriptalgoritmo import (
+    deflocations, defdistance, defarrivals, timetravel, calculationheadway
+)
+
+from functions import (
+    parametros, df_passengers_activebus, df_number_activebus, df_queues_at_stops, _nb_bins, time_system, time_waiting, number_stops_traveled, satisfaction, numberpassengers
+)
 
 class stop:
     def __init__(self, name, terminal, layover, next_stop, time_next_stop):
@@ -103,6 +111,39 @@ def asssign_full_blocks(time_table, routes):
         block = len(time_table[time_table['Block#'].isnull()])
     return time_table
 
+
+def next_trip2(time_table, time, route):
+    row=time_table
+    stop = route[0]
+    first_stop = route[0]
+    next_stop = stop.next_stop
+    running = 0
+    init_time = time
+    while True:
+        #Indice de la columna en la parada actual
+        index = route.index(stop)
+        #Tiempo de la anterior + el Running
+        time = time + datetime.timedelta(minutes =running)
+        plan_time =  time_table[str(index)] 
+        row[str(index)] = time 
+        #print(time -plan_time)
+        #Si es terminal, agregar el layover
+        if(stop.terminal == True and stop!=first_stop):
+            time = time + datetime.timedelta(minutes =stop.layover)
+            row[str(index+1)] = time 
+        #Ir a la siguiente parada
+        running = stop.time_next_stop
+        running = running + np.random.normal(stop.med, stop.desv, 1)[0]
+        stop = next_stop
+        next_stop = stop.next_stop
+        #Si la actual es igual a la primera, actualizar la ultima columna y salir
+        if(stop == first_stop):   
+            ftime = time + datetime.timedelta(minutes =running)
+            row[str(index+1)] = time + datetime.timedelta(minutes =running)
+            break       
+    return row, ftime, time_table['NextTrip']
+
+
 @app.route("/tables")
 def show_tables():
     #AM
@@ -143,12 +184,50 @@ def show_tables():
     columns.extend(cols)
     columns.extend(['NextTrip','PullIn'])
     time_table = pd.DataFrame(columns=columns)
-    time_table
     time_table, time, final = next_trip(time_table, time= datetime.datetime(2019, 7, 12, 6, 0, 0), stop=a, routes=routes)
     time_table =  assign_full_trips(time_table, headways, a, routes)
     time_table = asssign_full_blocks(time_table, routes)
-    return render_template('view.html',tables=[time_table.to_html(classes='female'), time_table.to_html(classes='male')],
+    time_table.sort_values('0', inplace=True)
+
+
+    sim_tt = pd.DataFrame()
+    for b in time_table['Block#'].unique():
+        ftime = None
+        for row in time_table[time_table['Block#']==b].iterrows():
+            if(ftime == None):
+                ftime = rowftime = row[1]['0']
+            r, ftime, ntrip = next_trip2(row[1], ftime, routes)
+            if(row[1]['NextTrip']!= 0):
+                if(ftime>row[1]['NextTrip']):
+                    r['RealNextTrip'] = pd.Timestamp(ftime)
+                else:
+                    r['RealNextTrip'] = row[1]['NextTrip']
+            sim_tt = sim_tt.append(r, ignore_index=True)
+
+    sim_tt['RealNextTrip'] = pd.to_datetime(sim_tt['RealNextTrip'])
+    sim_tt.sort_values('0')
+    ordenado = sim_tt[['Block#','PullOut','0', '1', '2', '3', '4', '5', '6', '7', 'PullIn', 'NextTrip', 'RealNextTrip']]
+    ordenado['RealNextTrip']=ordenado['RealNextTrip'].astype('datetime64[ns]')
+    ordenado['NextTrip'] = ordenado['RealNextTrip']
+    ordenado = ordenado.drop('RealNextTrip', 1)
+    ordenado = ordenado.sort_values('0')
+    ordenado.reset_index()
+
+    return render_template('view.html',tables=[time_table.to_html(classes='female'), ordenado.to_html(classes='male')],
     titles = ['na', 'Planificado', 'Simulado'])
+
+
+
+@app.route("/frecuencia", methods=['GET','POST'])
+def calculate_headway():
+    
+    dist = defdistance()
+    arrival = defarrivals()
+    duration = timetravel(5,300,dist)
+    head, head2, head3 = calculationheadway(0.24565,500, arrival, duration)
+    return render_template('headway.html',tables=[head.to_html(classes='female'), head2.to_html(classes='male'),  head3.to_html(classes='sal') ],
+    titles = ['na', 'Frecuencias para cada parada', 'Si aumentas los tiempos de espera, pero reduces el costo de servicio',  'Si disminuyes los tiempos de espera, pero aumentas el costo de servicio' ])
+
 
 @app.route("/")
 def menu_page():
@@ -156,6 +235,48 @@ def menu_page():
 
 
 
+@app.route("/rar")
+def steps():
+    return render_template("steps.html")
+
+
+
+
+@app.route("/simulacion", methods=['GET','POST'])
+def simulacion():
+    if request.method == 'POST':
+        interv = request.form.get("inter", False)
+        dicc, sim = parametros([ 0,  4,  15,  18,  30, 35, 42, 50], interv,15, 15)
+        simu = pd.DataFrame(dicc, index=[0]) 
+        df1 = df_passengers_activebus(sim)
+        df2 = df_number_activebus(sim)
+        df3 = df_queues_at_stops(sim)
+        df4 = time_system(sim)
+        df5 = time_waiting(sim)
+        df6 = number_stops_traveled(sim)
+        df7 = satisfaction(sim)
+        df8 = numberpassengers(sim)
+        return render_template('simulacion.html',tables=[
+        simu.to_html(classes='female'), 
+        df1.to_html(classes='female'),
+        df2.to_html(classes='female'), 
+        df3.to_html(classes='female'), 
+        df4.to_html(classes='female'), 
+        df5.to_html(classes='female'),
+        df6.to_html(classes='female'), 
+        df7.to_html(classes='female'), 
+        df8.to_html(classes='female')
+        ],
+        titles = ['na', 'Datos de la Simulacion', 'Pasajeros en Buses Activos', 'Numero de buses Activos', 'Cola por parada', 'Tiempo en el sistema', 'Tiempo de espera', 'Numero de parada recorridas', 'Satisfaccion de tiempo de espera', 'Numero de pasajeros' ])
+
+
+@app.route("/graf")
+def graf_page():
+    return render_template("graficos.html")
+
+@app.route("/video")
+def video_page():
+    return render_template("video.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
